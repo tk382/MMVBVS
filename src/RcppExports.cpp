@@ -214,15 +214,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// run2chains_c
-Rcpp::List run2chains_c(const arma::vec X, const arma::mat Y, const Rcpp::List initial_chain1, const arma::mat Phi, const arma::rowvec marcor, const double sigmabeta, const int niter, const int bgiter, const int hiter, const int burnin, const int Vbeta, const double smallchange);
-RcppExport SEXP _MMVBVS_run2chains_c(SEXP XSEXP, SEXP YSEXP, SEXP initial_chain1SEXP, SEXP PhiSEXP, SEXP marcorSEXP, SEXP sigmabetaSEXP, SEXP niterSEXP, SEXP bgiterSEXP, SEXP hiterSEXP, SEXP burninSEXP, SEXP VbetaSEXP, SEXP smallchangeSEXP) {
+// mmvbvs
+Rcpp::List mmvbvs(const arma::vec X, const arma::mat Y, const Rcpp::List initial_chain, const arma::mat Phi, const arma::rowvec marcor, const double sigmabeta, const int niter, const int bgiter, const int hiter, const int burnin, const int Vbeta, const double smallchange);
+RcppExport SEXP _MMVBVS_mmvbvs(SEXP XSEXP, SEXP YSEXP, SEXP initial_chainSEXP, SEXP PhiSEXP, SEXP marcorSEXP, SEXP sigmabetaSEXP, SEXP niterSEXP, SEXP bgiterSEXP, SEXP hiterSEXP, SEXP burninSEXP, SEXP VbetaSEXP, SEXP smallchangeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::List >::type initial_chain1(initial_chain1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type initial_chain(initial_chainSEXP);
     Rcpp::traits::input_parameter< const arma::mat >::type Phi(PhiSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type marcor(marcorSEXP);
     Rcpp::traits::input_parameter< const double >::type sigmabeta(sigmabetaSEXP);
@@ -232,7 +232,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type burnin(burninSEXP);
     Rcpp::traits::input_parameter< const int >::type Vbeta(VbetaSEXP);
     Rcpp::traits::input_parameter< const double >::type smallchange(smallchangeSEXP);
-    rcpp_result_gen = Rcpp::wrap(run2chains_c(X, Y, initial_chain1, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange));
+    rcpp_result_gen = Rcpp::wrap(mmvbvs(X, Y, initial_chain, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -252,7 +252,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MMVBVS_get_sigmabeta_from_h_c", (DL_FUNC) &_MMVBVS_get_sigmabeta_from_h_c, 5},
     {"_MMVBVS_get_h_from_sigmabeta_c", (DL_FUNC) &_MMVBVS_get_h_from_sigmabeta_c, 6},
     {"_MMVBVS_update_h_c", (DL_FUNC) &_MMVBVS_update_h_c, 7},
-    {"_MMVBVS_run2chains_c", (DL_FUNC) &_MMVBVS_run2chains_c, 12},
+    {"_MMVBVS_mmvbvs", (DL_FUNC) &_MMVBVS_mmvbvs, 12},
     {NULL, NULL, 0}
 };
 
