@@ -1,0 +1,54 @@
+---
+title: "Simulation Example"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: true
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    fig_width: 6
+    fig_height: 4
+---
+
+# Load Package
+```{r}
+library(MMVBVS)
+```
+# Create Data
+```{r}
+beta = c(seq(0.5, 2, length=5), rep(0,5))
+n = 500; T = length(beta); nu = T+5
+Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+X = as.numeric(scale(rnorm(n)))
+error = MASS::mvrnorm(n, rep(0,T), Sigma)
+gamma = c(rep(1,5), rep(0,5))
+Y = X %*% t(beta) + error; Y = scale(Y)
+for (i in 1:10){
+  Y[sample(1:400, 200), i] = NA
+}
+```
+
+# Run Algorithm
+
+```{r}
+Phi = diag(T)
+initial_chain = list(beta = rep(1,T), 
+                      gamma = rep(1,T), 
+                      Sigma = Phi, 
+                      sigmabeta = 1)
+mmvbvs(X = X,
+       Y = Y,
+       initial_chain = initial_chain,
+       Phi = diag(T),
+       marcor = colMeans(X*Y, na.rm=TRUE),
+       sigmabeta = 1)
+```
+
+# Analyze Result
+
+```{r}
+
+```
