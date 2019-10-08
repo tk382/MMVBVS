@@ -16,10 +16,11 @@ output:
 # Load Package
 ```{r}
 library(MMVBVS)
+library(ggplot2)
 ```
 # Create Data
 ```{r}
-beta = c(seq(0.5, 2, length=5), rep(0,5))
+beta = c(seq(0.1, 0.5, length=5), rep(0,5))
 n = 500; T = length(beta); nu = T+5
 Sigma = matrix(0.8, T, T); diag(Sigma) = 1
 X = as.numeric(scale(rnorm(n)))
@@ -34,21 +35,32 @@ for (i in 1:10){
 # Run Algorithm
 
 ```{r}
-Phi = diag(T)
-initial_chain = list(beta = rep(1,T), 
-                      gamma = rep(1,T), 
+Phi = matrix(0.5, T, T); diag(Phi) = 1
+initial_chain = list(beta = rep(0,T), 
+                      gamma = rep(0,T), 
                       Sigma = Phi, 
                       sigmabeta = 1)
-mmvbvs(X = X,
-       Y = Y,
-       initial_chain = initial_chain,
-       Phi = diag(T),
-       marcor = colMeans(X*Y, na.rm=TRUE),
-       sigmabeta = 1)
+result = mmvbvs(X = X,
+                Y = Y,
+                initial_chain = initial_chain,
+                Phi = diag(T),
+                marcor = colMeans(X*Y, na.rm=TRUE),
+                sigmabeta = 1,
+                niter=100,
+                verbose = FALSE)
 ```
 
 # Analyze Result
 
-```{r}
+```{r, fig.height = 5, fig.width = 4}
+plot_gamma(result, title = "")
+```
 
+```{r, fig.width = 4, fig.height = 3.5}
+plot_beta(result, title="")
+beta_dist(result, title="")
+```
+
+```{r}
+plot_sigma(result, title="")
 ```
