@@ -57,7 +57,7 @@ update_h_c <- function(initialh, hiter, gam, beta, Sig, X, T) {
     .Call('_MMVBVS_update_h_c', PACKAGE = 'MMVBVS', initialh, hiter, gam, beta, Sig, X, T)
 }
 
-run2chains_c <- function(X, Y, initial_chain1, Phi, marcor, sigmabeta, niter = 1000L, bgiter = 500L, hiter = 50L, burnin = 100000L, Vbeta = 1L, smallchange = 1e-2) {
-    .Call('_MMVBVS_run2chains_c', PACKAGE = 'MMVBVS', X, Y, initial_chain1, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange)
+mmvbvs <- function(X, Y, initial_chain, Phi, marcor, sigmabeta, niter = 1000L, bgiter = 500L, hiter = 50L, burnin = 100000L, Vbeta = 1L, smallchange = 1e-4, verbose = TRUE) {
+    .Call('_MMVBVS_mmvbvs', PACKAGE = 'MMVBVS', X, Y, initial_chain, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange, verbose)
 }
 

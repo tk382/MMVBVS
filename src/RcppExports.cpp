@@ -215,8 +215,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mmvbvs
-Rcpp::List mmvbvs(const arma::vec X, const arma::mat Y, const Rcpp::List initial_chain, const arma::mat Phi, const arma::rowvec marcor, const double sigmabeta, const int niter, const int bgiter, const int hiter, const int burnin, const int Vbeta, const double smallchange);
-RcppExport SEXP _MMVBVS_mmvbvs(SEXP XSEXP, SEXP YSEXP, SEXP initial_chainSEXP, SEXP PhiSEXP, SEXP marcorSEXP, SEXP sigmabetaSEXP, SEXP niterSEXP, SEXP bgiterSEXP, SEXP hiterSEXP, SEXP burninSEXP, SEXP VbetaSEXP, SEXP smallchangeSEXP) {
+Rcpp::List mmvbvs(const arma::vec X, const arma::mat Y, const Rcpp::List initial_chain, const arma::mat Phi, const arma::rowvec marcor, const double sigmabeta, const int niter, const int bgiter, const int hiter, const int burnin, const int Vbeta, const double smallchange, const bool verbose);
+RcppExport SEXP _MMVBVS_mmvbvs(SEXP XSEXP, SEXP YSEXP, SEXP initial_chainSEXP, SEXP PhiSEXP, SEXP marcorSEXP, SEXP sigmabetaSEXP, SEXP niterSEXP, SEXP bgiterSEXP, SEXP hiterSEXP, SEXP burninSEXP, SEXP VbetaSEXP, SEXP smallchangeSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -232,7 +232,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type burnin(burninSEXP);
     Rcpp::traits::input_parameter< const int >::type Vbeta(VbetaSEXP);
     Rcpp::traits::input_parameter< const double >::type smallchange(smallchangeSEXP);
-    rcpp_result_gen = Rcpp::wrap(mmvbvs(X, Y, initial_chain, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange));
+    Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(mmvbvs(X, Y, initial_chain, Phi, marcor, sigmabeta, niter, bgiter, hiter, burnin, Vbeta, smallchange, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -252,7 +253,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MMVBVS_get_sigmabeta_from_h_c", (DL_FUNC) &_MMVBVS_get_sigmabeta_from_h_c, 5},
     {"_MMVBVS_get_h_from_sigmabeta_c", (DL_FUNC) &_MMVBVS_get_h_from_sigmabeta_c, 6},
     {"_MMVBVS_update_h_c", (DL_FUNC) &_MMVBVS_update_h_c, 7},
-    {"_MMVBVS_mmvbvs", (DL_FUNC) &_MMVBVS_mmvbvs, 12},
+    {"_MMVBVS_mmvbvs", (DL_FUNC) &_MMVBVS_mmvbvs, 13},
     {NULL, NULL, 0}
 };
 

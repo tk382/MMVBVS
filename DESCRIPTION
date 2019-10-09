@@ -11,4 +11,7 @@ LazyData: true
 LinkingTo: Rcpp, RcppArmadillo
 Imports:
     Rcpp,
-    RcppArmadillo
+    RcppArmadillo,
+    MASS,
+    reshape,
+    ggplot2

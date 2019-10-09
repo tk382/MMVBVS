@@ -69,9 +69,6 @@ double dmvnrm_arma(const arma::rowvec x,
   return(out);
 }
 
-
-
-
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 arma::mat em_with_zero_mean_c(arma::mat y,
@@ -418,7 +415,6 @@ Rcpp::List update_h_c(const double initialh,
   );
 }
 
-
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 Rcpp::List mmvbvs(const arma::vec X,
@@ -432,7 +428,8 @@ Rcpp::List mmvbvs(const arma::vec X,
                         const int hiter   = 50,
                         const int burnin  = 100000,
                         const int Vbeta   = 1,
-                        const double smallchange = 1e-2){
+                        const double smallchange = 1e-4,
+                        const bool verbose = true){
 
   //initialize if not user-defined
   int T = Y.n_cols;
@@ -450,7 +447,6 @@ Rcpp::List mmvbvs(const arma::vec X,
   outgam1.col(0)     = as<arma::vec>(initial_chain["gamma"]);
   outSigma1.slice(0) = as<arma::mat>(initial_chain["Sigma"]);
   outsb1(0)          = initial_chain["sigmabeta"];
-  // outsb1(0)          = sigmabeta;
 
   for (int i=1; i<niter; ++i){
     Rcpp::List bg = update_betagam_random_c(X,
@@ -463,9 +459,7 @@ Rcpp::List mmvbvs(const arma::vec X,
                                         bgiter,
                                         smallchange);
     outgam1.col(i)  = as<arma::vec>(bg["gam"]);
-    // cout << outgam1.col(i).t() << "\n";
     outbeta1.col(i) = as<arma::vec>(bg["beta"]);
-    // cout << outbeta1.col(i).t() << "\n";
     outSigma1.slice(i) = update_Sigma_c(n,nu,X,outbeta1.col(i),Phi,Y);
     Rcpp::List hsig = update_h_c(outh1[i-1],
                                  hiter,
@@ -476,8 +470,6 @@ Rcpp::List mmvbvs(const arma::vec X,
                                  T);
     outh1(i) = hsig["h"];
     outsb1(i) = hsig["sigbeta"];
-    // outh1(i) = 0.5;
-    // outsb1(i) = sigmabeta;
     if(!arma::is_finite(outsb1(i))){
       outsb1(i) = 1;
     }
@@ -488,9 +480,15 @@ Rcpp::List mmvbvs(const arma::vec X,
                                outgam1.col(i),
                                outbeta1.col(i));
     // cout << tar1.col(i).t() << "\n";
-    if(i%10==0){
+    if((i%10==0) & (verbose)){
       cout << outgam1.col(i).t() << "\n";
       cout << i << "\n";
+    }
+    if((i > 5)){
+      if(abs(sum(tar1.col(i)) - sum(tar1.col(i-1))) < 1e-5){
+        cout << "Target likelihood converged!" << "\n";
+        break;
+      }
     }
   }
 
