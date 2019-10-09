@@ -5,4 +5,4 @@ output:
     toc: false
 ---
 
-Describe your project.
+Multivariate Bayesian Variable Selection algorithm that can account for randomly missing values. 
