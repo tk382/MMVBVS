@@ -565,10 +565,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtk382MMVBVStree5993746a947c972d8942cdd9b82f3ff2a8b23350targetblank5993746a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/tk382/MMVBVS/tree/5993746a947c972d8942cdd9b82f3ff2a8b23350" target="_blank">5993746</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtk382MMVBVStree472e2acfb6654a6fd63e4d24ec745c18eb7e76f9targetblank472e2aca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/tk382/MMVBVS/tree/472e2acfb6654a6fd63e4d24ec745c18eb7e76f9" target="_blank">472e2ac</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomtk382MMVBVStree5993746a947c972d8942cdd9b82f3ff2a8b23350targetblank5993746a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomtk382MMVBVStree472e2acfb6654a6fd63e4d24ec745c18eb7e76f9targetblank472e2aca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -586,19 +586,9 @@ Untracked files:
     Untracked:  .Rbuildignore
     Untracked:  .Rprofile
     Untracked:  .gitignore
-    Untracked:  R/analyze_results.R
     Untracked:  code/
     Untracked:  data/
     Untracked:  output/
-
-Unstaged changes:
-    Modified:   DESCRIPTION
-    Modified:   R/RcppExports.R
-    Modified:   analysis/_site.yml
-    Modified:   src/RcppExports.cpp
-    Modified:   src/RcppExports.o
-    Deleted:    src/breakthelink.cpp
-    Modified:   src/mmvbvs.cpp
 
 </code></pre>
 <p>
@@ -637,6 +627,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/tk382/MMVBVS/blob/472e2acfb6654a6fd63e4d24ec745c18eb7e76f9/analysis/Example.Rmd" target="_blank">472e2ac</a>
+</td>
+<td>
+tk382
+</td>
+<td>
+2019-10-09
+</td>
+<td>
+wflow_publish(“analysis/Example.Rmd”, republish = TRUE)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/tk382/MMVBVS/055a3b567927ced4e5c25869ac048d26f430799f/docs/Example.html" target="_blank">055a3b5</a>
+</td>
+<td>
+tk382
+</td>
+<td>
+2019-10-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -723,7 +747,7 @@ initial_chain =<span class="st"> </span><span class="kw">list</span>(<span class
 result =<span class="st"> </span><span class="kw">mmvbvs</span>(<span class="dt">X =</span> X,
                 <span class="dt">Y =</span> Y,
                 <span class="dt">initial_chain =</span> initial_chain,
-                <span class="dt">Phi =</span> <span class="kw">diag</span>(T),
+                <span class="dt">Phi =</span> Phi,
                 <span class="dt">marcor =</span> <span class="kw">colMeans</span>(X<span class="op">*</span>Y, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),
                 <span class="dt">sigmabeta =</span> <span class="dv">1</span>,
                 <span class="dt">niter=</span><span class="dv">100</span>,
@@ -731,6 +755,8 @@ result =<span class="st"> </span><span class="kw">mmvbvs</span>(<span class="dt"
 </div>
 <div id="analyze-result" class="section level1">
 <h1>Analyze Result</h1>
+<div id="inclusion-of-each-tissue-by-iterations" class="section level2">
+<h2>Inclusion of each tissue by iterations</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_gamma</span>(result, <span class="dt">title =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
 <p><img src="figure/Example.Rmd/unnamed-chunk-4-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>
@@ -770,6 +796,9 @@ tk382
 </table>
 </div>
 </div>
+</div>
+<div id="trajectory-of-beta-by-iterations" class="section level2">
+<h2>Trajectory of <span class="math inline">\(\beta\)</span> by iterations</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_beta</span>(result, <span class="dt">title=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
 <p><img src="figure/Example.Rmd/unnamed-chunk-5-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>
@@ -809,46 +838,10 @@ tk382
 </table>
 </div>
 </div>
+</div>
+<div id="posterior-distribution-of-the-coefficients-beta" class="section level2">
+<h2>Posterior Distribution of the coefficients <span class="math inline">\(\beta\)</span></h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">beta_dist</span>(result, <span class="dt">title=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="figure/Example.Rmd/unnamed-chunk-5-2.png" width="384" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
-Past versions of unnamed-chunk-5-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/tk382/MMVBVS/blob/4f4fc1586fbceca9909cbe0343d6a02bbd746457/docs/figure/Example.Rmd/unnamed-chunk-5-2.png" target="_blank">4f4fc15</a>
-</td>
-<td>
-tk382
-</td>
-<td>
-2019-10-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_sigma</span>(result, <span class="dt">title=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
 <p><img src="figure/Example.Rmd/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
@@ -887,7 +880,11 @@ tk382
 </table>
 </div>
 </div>
-<br> <br>
+</div>
+<div id="heatmap-of-posterior-mean-of-sigma" class="section level2">
+<h2>Heatmap of Posterior Mean of <span class="math inline">\(\Sigma\)</span></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_sigma</span>(result, <span class="dt">title=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
+<img src="figure/Example.Rmd/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /> <br> <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
@@ -924,6 +921,7 @@ loaded via a namespace (and not attached):
 [33] scales_1.0.0     htmltools_0.3.6  MASS_7.3-51.3    assertthat_0.2.1
 [37] colorspace_1.4-1 labeling_0.3     stringi_1.4.3    lazyeval_0.2.2  
 [41] munsell_0.5.0    crayon_1.3.4    </code></pre>
+</div>
 </div>
 </div>
 
