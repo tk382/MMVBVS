@@ -43,7 +43,7 @@ initial_chain = list(beta = rep(0,T),
 result = mmvbvs(X = X,
                 Y = Y,
                 initial_chain = initial_chain,
-                Phi = diag(T),
+                Phi = Phi,
                 marcor = colMeans(X*Y, na.rm=TRUE),
                 sigmabeta = 1,
                 niter=100,
@@ -52,15 +52,23 @@ result = mmvbvs(X = X,
 
 # Analyze Result
 
+## Inclusion of each tissue by iterations
+
 ```{r, fig.height = 5, fig.width = 4}
 plot_gamma(result, title = "")
 ```
 
+## Trajectory of $\beta$ by iterations
 ```{r, fig.width = 4, fig.height = 3.5}
 plot_beta(result, title="")
+```
+
+## Posterior Distribution of the coefficients $\beta$
+```{r}
 beta_dist(result, title="")
 ```
 
+## Heatmap of Posterior Mean of $\Sigma$
 ```{r}
 plot_sigma(result, title="")
 ```
