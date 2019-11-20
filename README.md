@@ -1,5 +1,5 @@
 # MMVBVS
 
-A [workflowr][] project.
+Details in this [workflowr vignette](https://tk382.github.io/MMVBVS).
 
-[workflowr]: https://github.com/jdblischak/workflowr
+Working paper in here.
