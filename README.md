@@ -1,5 +1,5 @@
 # MMVBVS
 
-Details in [here].
+Details in this [workflowr vignette](https://tk382.github.io/MMVBVS).
 
-[here]: https://tk382.github.io/MMVBVS
+Working paper in here.
