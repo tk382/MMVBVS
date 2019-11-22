@@ -1,11 +1,15 @@
 Package: MMVBVS
 Type: Package
-Title: Missing Multivariate Bayesian Variable Selection
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <tk382@uchicago.edu>
-Description: This does not that
-License: What license is it under?
+Title: MMVBVS: Missing Multivariate Bayesian Variable Selection
+Version: 1.0.0
+Author: Tae Kim
+Maintainer: Tae Kim <tk382@uchicago.edu>
+Description: MMVBVS selects variable selection using Bayesian Hierarchical
+    Model for multivariate normal variables with missing-at-random values.
+    Visualization functions show the posterior distribution of gamma
+    (inclusion variables) and beta (coefficients), and user can also visualize
+    the heatmap of the posterior mean of covariance matrix.
+License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp, RcppArmadillo
@@ -14,4 +18,8 @@ Imports:
     RcppArmadillo,
     MASS,
     reshape,
+    reshape2,
     ggplot2
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 2.1.0)

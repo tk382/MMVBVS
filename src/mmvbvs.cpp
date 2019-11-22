@@ -64,7 +64,7 @@ double dmvnrm_arma(const arma::rowvec x,
   arma::vec z = rooti*arma::trans(x-mean);
   out = constants - 0.5*arma::sum(z%z)+rootisum;
   if (logd == false){
-    out = exp(out);
+    out = std::exp(out);
   }
   return(out);
 }
@@ -266,7 +266,7 @@ arma::vec betagam_accept_random_c(const arma::vec X,
                               const int change){
   double newtarget = sum(get_target_c(X,Y,sigmabeta1,inputSigma,gam2,beta2));
   double oldtarget = sum(get_target_c(X,Y,sigmabeta1,inputSigma,gam1,beta1));
-  double proposal_iter = R::dnorm(beta1(changeind)-beta2(changeind),0,sqrt(Vbeta),true);
+  double proposal_iter = R::dnorm(beta1(changeind)-beta2(changeind),0, std::sqrt(Vbeta),true);
   double proposal_ratio = proposal_iter;
   // arma::rowvec marcor2 = min(marcor)+max(marcor)-marcor;
   // double proposal_ratio = 0;
@@ -315,11 +315,11 @@ Rcpp::List update_betagam_random_c(const arma::vec X,
     arma::vec beta2 = beta1 % gam2;
     if(change==1){
       arma::uvec ind = find(gam1==1);
-      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, sqrt(smallchange)));
-      beta2(changeind) = beta2(changeind) + (rnorm(1, 0, sqrt(Vbeta)))[0];
+      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, std::sqrt(smallchange)));
+      beta2(changeind) = beta2(changeind) + (rnorm(1, 0, std::sqrt(Vbeta)))[0];
     }else{
       arma::uvec ind = find(gam2==1);
-      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, sqrt(smallchange)));
+      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, std::sqrt(smallchange)));
       beta2(changeind) = 0;
     }
     arma::vec A = betagam_accept_random_c(X,Y,sigmabeta,
@@ -329,7 +329,7 @@ Rcpp::List update_betagam_random_c(const arma::vec X,
                                       changeind,change);
     NumericVector check2 = runif(1);
     double check = check2(0);
-    if(exp(A(0)) > check){
+    if(std::exp(A(0)) > check){
       gam1 = gam2; beta1 = beta2;
     }
   }
@@ -399,10 +399,10 @@ Rcpp::List update_h_c(const double initialh,
     double lik1 = 0; double lik2 = 0;
     for (int j=0; j < ind.size(); ++j){
       int newind = ind(j);
-      lik1 = lik1 + R::dnorm(beta(newind), 0, sqrt(sigmabeta1*ds(newind)), true);
-      lik2 = lik2 + R::dnorm(beta(newind), 0, sqrt(sigmabeta2*ds(newind)), true);
+      lik1 = lik1 + R::dnorm(beta(newind), 0, std::sqrt(sigmabeta1*ds(newind)), true);
+      lik2 = lik2 + R::dnorm(beta(newind), 0, std::sqrt(sigmabeta2*ds(newind)), true);
     }
-    double acceptanceprob = exp(lik2-lik1);
+    double acceptanceprob = std::exp(lik2-lik1);
     arma::vec ee = runif(1);
     double e = ee(0);
     if(e<acceptanceprob){
@@ -415,6 +415,20 @@ Rcpp::List update_h_c(const double initialh,
   );
 }
 
+
+//' Main function for variable selection
+//'
+//' @param X covariate with length N, sample size
+//' @param Y multivariate normal response variable N by P
+//' @param initial_chain: list of starting points for beta, gamma, sigma, and sigmabeta. beta is length P for the coefficients, gamma is length P inclusion vector where each element is 0 or 1. sigma should be P x P covariance matrix, and sigmabeta should be the expected variance of the betas.
+//' @param Phi: prior for the covariance matrix. We suggest identity matrix if there is no appropriate prior information
+//' @param niter: total number of iteration for MCMC
+//' @param bgiter: number of MH iteratiosn within one iteration of MCMC to fit Beta and Gamma
+//' @param burnin: number of first iterations to ignore
+//' @param Vbeta: variance of beta
+//' @param smallchange: perturbation size for MH algorithm
+//' @param verbose: if set TRUE, print gamma for each iteration
+//' @export
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 Rcpp::List mmvbvs(const arma::vec X,
@@ -422,7 +436,6 @@ Rcpp::List mmvbvs(const arma::vec X,
                         const Rcpp::List initial_chain,//const Rcpp::List initial_chain2,
                         const arma::mat Phi,
                         const arma::rowvec marcor,
-                        const double sigmabeta,
                         const int niter   = 1000,
                         const int bgiter  = 500,
                         const int hiter   = 50,
