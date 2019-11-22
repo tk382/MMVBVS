@@ -45,7 +45,6 @@ result = mmvbvs(X = X,
                 initial_chain = initial_chain,
                 Phi = Phi,
                 marcor = colMeans(X*Y, na.rm=TRUE),
-                sigmabeta = 1,
                 niter=100,
                 verbose = FALSE)
 ```

@@ -22,7 +22,7 @@ plot_gamma = function(result, title = "") {
     g = ggplot2::ggplot(mdatgamma, aes(x = variable, y = id, fill = gamma)) +
       geom_tile(color = "white") + scale_fill_discrete() + ylab("iterations") + xlab("gamma") +
       ggtitle(title)
-    plot(g)
+    # plot(g)
     return(g)
 }
 
@@ -33,6 +33,7 @@ plot_gamma = function(result, title = "") {
 #' @return ggplot object
 #' @examples
 #' g = plot_beta(result, title = "How coefficients converge")
+#' @export
 plot_beta = function(result, title = "") {
     beta = result$beta
     T = ncol(beta)
@@ -60,7 +61,7 @@ plot_beta = function(result, title = "") {
 #' @examples
 #' g = beta_dist(result, title = "Posterior Distribution of Coefficients")
 #'
-#'
+#' @export
 beta_dist = function(result, title = "") {
     beta = result$beta[-1, ]
     T = ncol(beta)
@@ -73,7 +74,7 @@ beta_dist = function(result, title = "") {
     datbeta2 = reshape::melt(datbeta, id = "id")
     datbeta2$xx = rep(1:nniter, T)
     g = ggplot2::ggplot(datbeta2, aes(x = variable, y = value)) + geom_violin()
-    plot(g)
+    # plot(g)
     return(g)
 }
 
@@ -84,6 +85,7 @@ beta_dist = function(result, title = "") {
 #' @return ggplot object
 #' @examples
 #' g = plot_sigma(result, title = "Posterior Mean of Covariance Matrix")
+#' @export
 plot_sigma = function(result, title = "") {
     Sigma = apply(result$Sigma, c(1, 2), mean)
     T = nrow(Sigma)
@@ -96,6 +98,6 @@ plot_sigma = function(result, title = "") {
     g = ggplot2::ggplot(msig, aes(x = id, y = variable, fill = value)) + geom_tile() +
       scale_fill_gradient(limits = c(0, 1.2)) + ylab("") + xlab("") +
       geom_text(aes(label = round(value, 2)))
-    plot(g)
+    # plot(g)
     return(g)
 }
