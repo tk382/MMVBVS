@@ -73,17 +73,14 @@ update_h_c <- function(initialh, hiter, gam, beta, Sig, X, T) {
 #' @return list of posterior beta, gamma, and covariance matrix sigma
 #' @examples
 #' beta = c(rep(0.5, 3), rep(0,3))
-#' n = 500; T = length(beta); nu = T+5
+#' n = 200; T = length(beta); nu = T+5
 #' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
 #' X = as.numeric(scale(rnorm(n)))
 #'  error = MASS::mvrnorm(n, rep(0,T), Sigma)
 #'  gamma = c(rep(1,3), rep(0,3))
 #'  Y = X %*% t(beta) + error; Y = scale(Y)
-#'    for (i in 1:10){
-#'      Y[sample(1:400, 200), i] = NA
-#'    }
-#'    Phi = matrix(0.5, T, T); diag(Phi) = 1
-#'    initial_chain = list(beta = rep(0,T),
+#'  Phi = matrix(0.5, T, T); diag(Phi) = 1
+#'  initial_chain = list(beta = rep(0,T),
 #'                         gamma = rep(0,T),
 #'                         Sigma = Phi,
 #'                         sigmabeta = 1)

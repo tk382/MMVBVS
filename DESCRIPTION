@@ -15,12 +15,11 @@ LazyData: true
 LinkingTo: Rcpp, RcppArmadillo
 Imports:
     Rcpp,
-    RcppArmadillo,
-    MASS,
     reshape,
     reshape2,
     ggplot2,
-    rlang
+    rlang,
+    MASS
 RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0)
