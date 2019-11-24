@@ -1,4 +1,5 @@
-# MMVBVS
+# MMVBVS 
+[https://travis-ci.com/tk382/MMVBVS.svg?branch=master]
 
 Multivariate Bayesian Selection algorithm, applied to multi-tissue gene expression level data.
 
