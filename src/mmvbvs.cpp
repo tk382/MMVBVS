@@ -3,8 +3,7 @@
 using namespace Rcpp;
 using namespace std;
 
-const double log2pi = std::log(2.0 * M_PI);
-
+const double log2pi = log(2.0 * M_PI);
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
@@ -64,7 +63,7 @@ double dmvnrm_arma(const arma::rowvec x,
   arma::vec z = rooti*arma::trans(x-mean);
   out = constants - 0.5*arma::sum(z%z)+rootisum;
   if (logd == false){
-    out = std::exp(out);
+    out = exp(out);
   }
   return(out);
 }
@@ -266,7 +265,7 @@ arma::vec betagam_accept_random_c(const arma::vec X,
                               const int change){
   double newtarget = sum(get_target_c(X,Y,sigmabeta1,inputSigma,gam2,beta2));
   double oldtarget = sum(get_target_c(X,Y,sigmabeta1,inputSigma,gam1,beta1));
-  double proposal_iter = R::dnorm(beta1(changeind)-beta2(changeind),0, std::sqrt(Vbeta),true);
+  double proposal_iter = R::dnorm(beta1(changeind)-beta2(changeind),0, sqrt(Vbeta),true);
   double proposal_ratio = proposal_iter;
   // arma::rowvec marcor2 = min(marcor)+max(marcor)-marcor;
   // double proposal_ratio = 0;
@@ -315,11 +314,11 @@ Rcpp::List update_betagam_random_c(const arma::vec X,
     arma::vec beta2 = beta1 % gam2;
     if(change==1){
       arma::uvec ind = find(gam1==1);
-      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, std::sqrt(smallchange)));
-      beta2(changeind) = beta2(changeind) + (rnorm(1, 0, std::sqrt(Vbeta)))[0];
+      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, sqrt(smallchange)));
+      beta2(changeind) = beta2(changeind) + (rnorm(1, 0, sqrt(Vbeta)))[0];
     }else{
       arma::uvec ind = find(gam2==1);
-      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, std::sqrt(smallchange)));
+      beta2(ind) = beta1(ind) + as<arma::vec>(rnorm(ind.size(), 0, sqrt(smallchange)));
       beta2(changeind) = 0;
     }
     arma::vec A = betagam_accept_random_c(X,Y,sigmabeta,
@@ -329,7 +328,7 @@ Rcpp::List update_betagam_random_c(const arma::vec X,
                                       changeind,change);
     NumericVector check2 = runif(1);
     double check = check2(0);
-    if(std::exp(A(0)) > check){
+    if(exp(A(0)) > check){
       gam1 = gam2; beta1 = beta2;
     }
   }
@@ -399,10 +398,10 @@ Rcpp::List update_h_c(const double initialh,
     double lik1 = 0; double lik2 = 0;
     for (int j=0; j < ind.size(); ++j){
       int newind = ind(j);
-      lik1 = lik1 + R::dnorm(beta(newind), 0, std::sqrt(sigmabeta1*ds(newind)), true);
-      lik2 = lik2 + R::dnorm(beta(newind), 0, std::sqrt(sigmabeta2*ds(newind)), true);
+      lik1 = lik1 + R::dnorm(beta(newind), 0, sqrt(sigmabeta1*ds(newind)), true);
+      lik2 = lik2 + R::dnorm(beta(newind), 0, sqrt(sigmabeta2*ds(newind)), true);
     }
-    double acceptanceprob = std::exp(lik2-lik1);
+    double acceptanceprob = exp(lik2-lik1);
     arma::vec ee = runif(1);
     double e = ee(0);
     if(e<acceptanceprob){
@@ -417,19 +416,43 @@ Rcpp::List update_h_c(const double initialh,
 
 
 //' Main function for variable selection
-//'
 //' @param X covariate with length N, sample size
 //' @param Y multivariate normal response variable N by P
-//' @param initial_chain: list of starting points for beta, gamma, sigma, and sigmabeta. beta is length P for the coefficients, gamma is length P inclusion vector where each element is 0 or 1. sigma should be P x P covariance matrix, and sigmabeta should be the expected variance of the betas.
-//' @param Phi: prior for the covariance matrix. We suggest identity matrix if there is no appropriate prior information
-//' @param niter: total number of iteration for MCMC
-//' @param bgiter: number of MH iteratiosn within one iteration of MCMC to fit Beta and Gamma
-//' @param burnin: number of first iterations to ignore
-//' @param Vbeta: variance of beta
-//' @param smallchange: perturbation size for MH algorithm
-//' @param verbose: if set TRUE, print gamma for each iteration
+//' @param initial_chain list of starting points for beta, gamma, sigma, and sigmabeta. beta is length P for the coefficients, gamma is length P inclusion vector where each element is 0 or 1. sigma should be P x P covariance matrix, and sigmabeta should be the expected variance of the betas.
+//' @param Phi prior for the covariance matrix. We suggest identity matrix if there is no appropriate prior information
+//' @param marcor length P vector of correlation between X and each variable of Y
+//' @param niter total number of iteration for MCMC
+//' @param bgiter number of MH iterations within one iteration of MCMC to fit Beta and Gamma
+//' @param burnin number of MH iterations for h, proportion of variance explained
+//' @param hiter number of first iterations to ignore
+//' @param Vbeta variance of beta
+//' @param smallchange perturbation size for MH algorithm
+//' @param verbose if set TRUE, print gamma for each iteration
+//' @return list of posterior beta, gamma, and covariance matrix sigma
+//' @examples
+//' beta = c(rep(0.5, 3), rep(0,3))
+//' n = 500; T = length(beta); nu = T+5
+//' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+//' X = as.numeric(scale(rnorm(n)))
+//'  error = MASS::mvrnorm(n, rep(0,T), Sigma)
+//'  gamma = c(rep(1,3), rep(0,3))
+//'  Y = X %*% t(beta) + error; Y = scale(Y)
+//'    for (i in 1:10){
+//'      Y[sample(1:400, 200), i] = NA
+//'    }
+//'    Phi = matrix(0.5, T, T); diag(Phi) = 1
+//'    initial_chain = list(beta = rep(0,T),
+//'                         gamma = rep(0,T),
+//'                         Sigma = Phi,
+//'                         sigmabeta = 1)
+//'      result = mmvbvs(X = X,
+//'                      Y = Y,
+//'                      initial_chain = initial_chain,
+//'                      Phi = Phi,
+//'                      marcor = colMeans(X*Y, na.rm=TRUE),
+//'                      niter=10,
+//'                      verbose = FALSE)
 //' @export
-// [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 Rcpp::List mmvbvs(const arma::vec X,
                         const arma::mat Y,
@@ -443,7 +466,6 @@ Rcpp::List mmvbvs(const arma::vec X,
                         const int Vbeta   = 1,
                         const double smallchange = 1e-4,
                         const bool verbose = true){
-
   //initialize if not user-defined
   int T = Y.n_cols;
   int n = Y.n_rows;
@@ -494,12 +516,12 @@ Rcpp::List mmvbvs(const arma::vec X,
                                outbeta1.col(i));
     // cout << tar1.col(i).t() << "\n";
     if((i%10==0) & (verbose)){
-      cout << outgam1.col(i).t() << "\n";
-      cout << i << "\n";
+      // cout << outgam1.col(i).t() << "\n";
+      // cout << i << "\n";
     }
     if((i > 5)){
       if(abs(sum(tar1.col(i)) - sum(tar1.col(i-1))) < 1e-5){
-        cout << "Target likelihood converged!" << "\n";
+        // cout << "Target likelihood converged!" << "\n";
         break;
       }
     }

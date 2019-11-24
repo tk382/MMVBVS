@@ -1,7 +1,7 @@
 Package: MMVBVS
 Type: Package
 Title: MMVBVS: Missing Multivariate Bayesian Variable Selection
-Version: 1.0.0
+Version: 0.8.0
 Author: Tae Kim
 Maintainer: Tae Kim <tk382@uchicago.edu>
 Description: MMVBVS selects variable selection using Bayesian Hierarchical
@@ -19,7 +19,8 @@ Imports:
     MASS,
     reshape,
     reshape2,
-    ggplot2
+    ggplot2,
+    rlang
 RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0)

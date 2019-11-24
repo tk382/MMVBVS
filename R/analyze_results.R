@@ -3,8 +3,7 @@
 #' @param result Output object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
-#' @examples
-#' g = plot_gamma(result, title = "Inclusion fo each variable as MCMC converges")
+#' @export
 plot_gamma = function(result, title = "") {
     gamma = result$gamma
     nniter = nrow(gamma)
@@ -19,9 +18,8 @@ plot_gamma = function(result, title = "") {
     mdatgamma = reshape2::melt(datgamma, id = "id")
     colnames(mdatgamma)[3] = "gamma"
     mdatgamma$gamma = as.factor(mdatgamma$gamma)
-    g = ggplot2::ggplot(mdatgamma, aes(x = variable, y = id, fill = gamma)) +
-      geom_tile(color = "white") + scale_fill_discrete() + ylab("iterations") + xlab("gamma") +
-      ggtitle(title)
+    g = ggplot2::ggplot(mdatgamma, aes(x = .data$variable, y = .data$id, fill = .data$gamma)) + geom_tile(color = "white") +
+        scale_fill_discrete() + ylab("iterations") + xlab("gamma") + ggtitle(title)
     # plot(g)
     return(g)
 }
@@ -31,8 +29,6 @@ plot_gamma = function(result, title = "") {
 #' @param result Output object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
-#' @examples
-#' g = plot_beta(result, title = "How coefficients converge")
 #' @export
 plot_beta = function(result, title = "") {
     beta = result$beta
@@ -45,8 +41,8 @@ plot_beta = function(result, title = "") {
     datbeta$id = factor(datbeta$id, levels = datbeta$id)
     datbeta2 = reshape::melt(datbeta, id = "id")
     datbeta2$xx = rep(1:nniter, T)
-    g = ggplot2::ggplot(datbeta2, aes(x = xx, y = value, col = variable)) +
-      geom_line(alpha = 0.7) + ylab("beta") + xlab("iteration") + ggtitle(title)
+    g = ggplot2::ggplot(datbeta2, aes(x = .data$xx, y = .data$value, col = .data$variable)) + ggplot2::geom_line(alpha = 0.7) +
+        ggplot2::ylab("beta") + ggplot2::xlab("iteration") + ggplot2::ggtitle(title)
     plot(g)
     return(g)
 
@@ -58,9 +54,6 @@ plot_beta = function(result, title = "") {
 #' @param result resulting object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
-#' @examples
-#' g = beta_dist(result, title = "Posterior Distribution of Coefficients")
-#'
 #' @export
 beta_dist = function(result, title = "") {
     beta = result$beta[-1, ]
@@ -73,7 +66,7 @@ beta_dist = function(result, title = "") {
     datbeta$id = factor(datbeta$id, levels = datbeta$id)
     datbeta2 = reshape::melt(datbeta, id = "id")
     datbeta2$xx = rep(1:nniter, T)
-    g = ggplot2::ggplot(datbeta2, aes(x = variable, y = value)) + geom_violin()
+    g = ggplot2::ggplot(datbeta2, aes(x = .data$variable, y = .data$value)) + ggplot2::geom_violin()
     # plot(g)
     return(g)
 }
@@ -83,8 +76,6 @@ beta_dist = function(result, title = "") {
 #' @param result resulting object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
-#' @examples
-#' g = plot_sigma(result, title = "Posterior Mean of Covariance Matrix")
 #' @export
 plot_sigma = function(result, title = "") {
     Sigma = apply(result$Sigma, c(1, 2), mean)
@@ -95,9 +86,9 @@ plot_sigma = function(result, title = "") {
     msig = reshape2::melt(Sigma, id = "id")
     msig$id = factor(msig$id, levels = paste0("v", 1:10))
     msig$variable = factor(msig$variable, levels = paste0("v", 1:10))
-    g = ggplot2::ggplot(msig, aes(x = id, y = variable, fill = value)) + geom_tile() +
-      scale_fill_gradient(limits = c(0, 1.2)) + ylab("") + xlab("") +
-      geom_text(aes(label = round(value, 2)))
+    g = ggplot2::ggplot(msig, aes(x = .data$id, y = .data$variable, fill = .data$value)) + ggplot2::geom_tile() +
+        ggplot2::scale_fill_gradient(limits = c(0, 1.2)) + ggplot2::ylab("") + ggplot2::xlab("") +
+        ggplot2::geom_text(aes(label = round(.data$value, 2)))
     # plot(g)
     return(g)
 }
