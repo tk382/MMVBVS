@@ -76,21 +76,21 @@ update_h_c <- function(initialh, hiter, gam, beta, Sig, X, T) {
 #' n = 200; T = length(beta); nu = T+5
 #' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
 #' X = as.numeric(scale(rnorm(n)))
-#'  error = MASS::mvrnorm(n, rep(0,T), Sigma)
-#'  gamma = c(rep(1,3), rep(0,3))
-#'  Y = X %*% t(beta) + error; Y = scale(Y)
-#'  Phi = matrix(0.5, T, T); diag(Phi) = 1
-#'  initial_chain = list(beta = rep(0,T),
-#'                         gamma = rep(0,T),
-#'                         Sigma = Phi,
-#'                         sigmabeta = 1)
-#'      result = mmvbvs(X = X,
-#'                      Y = Y,
-#'                      initial_chain = initial_chain,
-#'                      Phi = Phi,
-#'                      marcor = colMeans(X*Y, na.rm=TRUE),
-#'                      niter=10,
-#'                      verbose = FALSE)
+#' error = MASS::mvrnorm(n, rep(0,T), Sigma)
+#' gamma = c(rep(1,3), rep(0,3))
+#' Y = X %*% t(beta) + error; Y = scale(Y)
+#' Phi = matrix(0.5, T, T); diag(Phi) = 1
+#' initial_chain = list(beta = rep(0,T),
+#'                      gamma = rep(0,T),
+#'                      Sigma = Phi,
+#'                      sigmabeta = 1)
+#' result = mmvbvs(X = X,
+#'                 Y = Y,
+#'                 initial_chain = initial_chain,
+#'                 Phi = Phi,
+#'                 marcor = colMeans(X*Y, na.rm=TRUE),
+#'                 niter=10,
+#'                 verbose = FALSE)
 #' @export
 mmvbvs <- function(X, Y, initial_chain, Phi, marcor, niter = 1000L, bgiter = 500L, hiter = 50L, burnin = 100000L, Vbeta = 1L, smallchange = 1e-4, verbose = TRUE) {
     .Call('_MMVBVS_mmvbvs', PACKAGE = 'MMVBVS', X, Y, initial_chain, Phi, marcor, niter, bgiter, hiter, burnin, Vbeta, smallchange, verbose)
