@@ -1,14 +1,18 @@
 Package: MMVBVS
 Type: Package
-Title: MMVBVS: Missing Multivariate Bayesian Variable Selection
+Title: Missing Multivariate Bayesian Variable Selection
 Version: 0.8.0
 Author: Tae Kim
 Maintainer: Tae Kim <tk382@uchicago.edu>
-Description: MMVBVS selects variable selection using Bayesian Hierarchical
+Description: A variable selection tool using Bayesian Hierarchical
     Model for multivariate normal variables with missing-at-random values.
     Visualization functions show the posterior distribution of gamma
-    (inclusion variables) and beta (coefficients), and user can also visualize
-    the heatmap of the posterior mean of covariance matrix.
+    (inclusion variables) and beta (coefficients). Users can also visualize
+    the heatmap of the posterior mean of covariance matrix. 
+    (Kim, T. Nicolae, D. Multivariate Bayesian Analysis with Incomplete Data: 
+    Application to Loca Ancestry Effects on Admixed Transcriptome),
+    (Guan, Y. Stephens, M. Bayesian Variable Selection Regression for Genome-Wide
+    Association Studies, and Other Large-Scale Problems)
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -18,8 +22,8 @@ Imports:
     reshape,
     reshape2,
     ggplot2,
-    rlang,
-    MASS
+    rlang
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat,
+    MASS

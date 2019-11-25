@@ -1,0 +1,13 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\_workflowr\.yml$
+^docs$
+^analysis$
+^workingpaper\.pdf$
+^\.gitignore$
+^\.git$
+^.*\.o$
+^.*\.so$
+^packrat/
+^\.Rprofile$
+^\.travis\.yml$
