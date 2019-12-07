@@ -8,9 +8,9 @@ const double log2pi = log(2.0 * M_PI);
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 arma::rowvec colmeanNA(arma::mat Y){
-  int T = Y.n_cols;
-  arma::rowvec colmean = arma::zeros<arma::rowvec>(T);
-  for (int i=0; i < T; ++i){
+  int P = Y.n_cols;
+  arma::rowvec colmean = arma::zeros<arma::rowvec>(P);
+  for (int i=0; i < P; ++i){
     arma::vec ycol = Y.col(i);
     arma::uvec finiteind = find_finite(ycol);
     arma::vec yy = ycol(finiteind);
@@ -169,7 +169,7 @@ arma::vec get_target_c(const arma::vec X,
                        const arma::vec gam,
                        const arma::vec beta){
   //get the target likelihood circumventing the missing value issue
-  int T = Y.n_cols;
+  int P = Y.n_cols;
   int n = Y.n_rows;
   double L = 0;
   double B = 0;
@@ -195,7 +195,7 @@ arma::vec get_target_c(const arma::vec X,
       B = B + R::dnorm(beta(newind), 0, sqrt(sigmabeta), true);
     }
   }
-  G = log(std::tgamma(s+1)*std::tgamma(T-s+1)/std::tgamma(T+2));
+  G = log(std::tgamma(s+1)*std::tgamma(P-s+1)/std::tgamma(P+2));
   arma::vec out = arma::zeros<arma::vec>(3);
   out(0) = L;
   out(1) = B;
@@ -221,10 +221,10 @@ arma::mat update_Sigma_c(const int n,
                          const arma::vec beta,
                          const arma::mat Phi,
                          const arma::mat Y){
-  int T = Y.n_cols;
+  int P = Y.n_cols;
   arma::mat X2 = arma::zeros<arma::mat>(n, 1);
   X2.col(0) = X;
-  arma::mat beta2 = arma::zeros<arma::mat>(T,1);
+  arma::mat beta2 = arma::zeros<arma::mat>(P,1);
   beta2.col(0) = beta;
   arma::mat r = Y - X2 * beta2.t();
   arma::mat emp = em_with_zero_mean_c(r,100);
@@ -346,7 +346,7 @@ double get_sigmabeta_from_h_c(const double h,
                               const arma::vec gam,
                               const arma::mat Sigma,
                               const arma::vec X,
-                              const int T){
+                              const int P){
   //convert h to sigmabeta conditioning on gamma and Sigma
   arma::uvec ind = find(gam == 1);
   arma::vec ds = Sigma.diag();
@@ -363,7 +363,7 @@ double get_h_from_sigmabeta_c(const arma::vec X,
                               const arma::mat Sigma,
                               const arma::vec gam,
                               const int n,
-                              const int T){
+                              const int P){
   //converts sigmabeta to h conditioning on gamma and Sigma
   arma::uvec ind = find(gam==1);
   arma::vec ds = Sigma.diag();
@@ -380,9 +380,9 @@ Rcpp::List update_h_c(const double initialh,
                       const arma::vec beta,
                       const arma::mat Sig,
                       const arma::vec X,
-                      int T){
+                      int P){
   double h1 = initialh;
-  double sigbeta1 = get_sigmabeta_from_h_c(initialh, gam, Sig, X, T);
+  double sigbeta1 = get_sigmabeta_from_h_c(initialh, gam, Sig, X, P);
   arma::vec lik = arma::zeros<arma::vec>(hiter);
   arma::vec ds = Sig.diag();
   for (int i=1; i<hiter; ++i){
@@ -393,8 +393,8 @@ Rcpp::List update_h_c(const double initialh,
     if(h2<1e-3){h2 = abs(2*1e-6 - h2);}
     if(h2>0.9){h2 = 1.8-h2;}
     arma::uvec ind = find(gam==1);
-    double sigmabeta1 = get_sigmabeta_from_h_c(h1, gam, Sig, X, T);
-    double sigmabeta2 = get_sigmabeta_from_h_c(h2, gam, Sig, X, T);
+    double sigmabeta1 = get_sigmabeta_from_h_c(h1, gam, Sig, X, P);
+    double sigmabeta2 = get_sigmabeta_from_h_c(h2, gam, Sig, X, P);
     double lik1 = 0; double lik2 = 0;
     for (int j=0; j < ind.size(); ++j){
       int newind = ind(j);
@@ -464,13 +464,13 @@ Rcpp::List mmvbvs(const arma::vec X,
                         const double smallchange = 1e-4,
                         const bool verbose = true){
   //initialize if not user-defined
-  int T = Y.n_cols;
+  int P = Y.n_cols;
   int n = Y.n_rows;
   int nu = n;
 
-  arma::mat outbeta1 = arma::zeros<arma::mat>(T, niter);
-  arma::mat outgam1 = arma::zeros<arma::mat>(T,niter);
-  arma::cube outSigma1 = arma::zeros<arma::cube>(T,T,niter);
+  arma::mat outbeta1 = arma::zeros<arma::mat>(P, niter);
+  arma::mat outgam1 = arma::zeros<arma::mat>(P,niter);
+  arma::cube outSigma1 = arma::zeros<arma::cube>(P,P,niter);
   arma::vec outsb1 = arma::zeros<arma::vec>(niter);
   arma::vec outh1 = arma::zeros<arma::vec>(niter);
   arma::mat tar1 = arma::zeros<arma::mat>(3, niter);
@@ -499,7 +499,7 @@ Rcpp::List mmvbvs(const arma::vec X,
                                  outbeta1.col(i),
                                  outSigma1.slice(i),
                                  X,
-                                 T);
+                                 P);
     outh1(i) = hsig["h"];
     outsb1(i) = hsig["sigbeta"];
     if(!arma::is_finite(outsb1(i))){
