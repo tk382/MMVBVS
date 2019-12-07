@@ -3,6 +3,23 @@
 #' @param result Output object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
+#' @example
+#' set.seed(1001)
+#' beta = c(rep(0.5, 3), rep(0,3))
+#' n = 200; T = length(beta); nu = T+5
+#' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+#' X = as.numeric(scale(rnorm(n)))
+#' error = MASS::mvrnorm(n, rep(0,T), Sigma)
+#' gamma = c(rep(1,3), rep(0,3))
+#' Y = X %*% t(beta) + error; Y = scale(Y)
+#' Phi = matrix(0.5, T, T); diag(Phi) = 1
+#' initial_chain = list(beta = rep(0,T),
+#'                      gamma = rep(0,T),
+#'                      Sigma = Phi,
+#'                      sigmabeta = 1)
+#' result = mmvbvs(X = X, Y = Y,initial_chain = initial_chain,Phi = Phi,
+#'                 marcor = colMeans(X*Y, na.rm=TRUE), niter=10,verbose = FALSE)
+#' plot_gamma(result, title = "gamma result")
 #' @export
 plot_gamma = function(result, title = "") {
     gamma = result$gamma
@@ -29,6 +46,23 @@ plot_gamma = function(result, title = "") {
 #' @param result Output object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
+#' @example
+#' set.seed(1001)
+#' beta = c(rep(0.5, 3), rep(0,3))
+#' n = 200; T = length(beta); nu = T+5
+#' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+#' X = as.numeric(scale(rnorm(n)))
+#' error = MASS::mvrnorm(n, rep(0,T), Sigma)
+#' gamma = c(rep(1,3), rep(0,3))
+#' Y = X %*% t(beta) + error; Y = scale(Y)
+#' Phi = matrix(0.5, T, T); diag(Phi) = 1
+#' initial_chain = list(beta = rep(0,T),
+#'                      gamma = rep(0,T),
+#'                      Sigma = Phi,
+#'                      sigmabeta = 1)
+#' result = mmvbvs(X = X, Y = Y,initial_chain = initial_chain,Phi = Phi,
+#'                 marcor = colMeans(X*Y, na.rm=TRUE), niter=10,verbose = FALSE)
+#' plot_beta(result, title = "gamma result")
 #' @export
 plot_beta = function(result, title = "") {
     beta = result$beta
@@ -54,6 +88,23 @@ plot_beta = function(result, title = "") {
 #' @param result resulting object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
 #' @return ggplot object
+#' @example
+#' set.seed(1001)
+#' beta = c(rep(0.5, 3), rep(0,3))
+#' n = 200; T = length(beta); nu = T+5
+#' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+#' X = as.numeric(scale(rnorm(n)))
+#' error = MASS::mvrnorm(n, rep(0,T), Sigma)
+#' gamma = c(rep(1,3), rep(0,3))
+#' Y = X %*% t(beta) + error; Y = scale(Y)
+#' Phi = matrix(0.5, T, T); diag(Phi) = 1
+#' initial_chain = list(beta = rep(0,T),
+#'                      gamma = rep(0,T),
+#'                      Sigma = Phi,
+#'                      sigmabeta = 1)
+#' result = mmvbvs(X = X, Y = Y,initial_chain = initial_chain,Phi = Phi,
+#'                 marcor = colMeans(X*Y, na.rm=TRUE), niter=10,verbose = FALSE)
+#' beta_dist(result, title = "gamma result")
 #' @export
 beta_dist = function(result, title = "") {
     beta = result$beta[-1, ]
@@ -75,7 +126,24 @@ beta_dist = function(result, title = "") {
 #'
 #' @param result resulting object from mmvbvs function
 #' @param title A string object for the title of the resulting plot
-#' @return ggplot object
+#' @return ggplot object#'
+#' @example
+#' set.seed(1001)
+#' beta = c(rep(0.5, 3), rep(0,3))
+#' n = 200; T = length(beta); nu = T+5
+#' Sigma = matrix(0.8, T, T); diag(Sigma) = 1
+#' X = as.numeric(scale(rnorm(n)))
+#' error = MASS::mvrnorm(n, rep(0,T), Sigma)
+#' gamma = c(rep(1,3), rep(0,3))
+#' Y = X %*% t(beta) + error; Y = scale(Y)
+#' Phi = matrix(0.5, T, T); diag(Phi) = 1
+#' initial_chain = list(beta = rep(0,T),
+#'                      gamma = rep(0,T),
+#'                      Sigma = Phi,
+#'                      sigmabeta = 1)
+#' result = mmvbvs(X = X, Y = Y,initial_chain = initial_chain,Phi = Phi,
+#'                 marcor = colMeans(X*Y, na.rm=TRUE), niter=10,verbose = FALSE)
+#' plot_sigma(result, title = "gamma result")
 #' @export
 plot_sigma = function(result, title = "") {
     Sigma = apply(result$Sigma, c(1, 2), mean)
@@ -89,6 +157,6 @@ plot_sigma = function(result, title = "") {
     g = ggplot2::ggplot(msig, aes(x = .data$id, y = .data$variable, fill = .data$value)) + ggplot2::geom_tile() +
         ggplot2::scale_fill_gradient(limits = c(0, 1.2)) + ggplot2::ylab("") + ggplot2::xlab("") +
         ggplot2::geom_text(aes(label = round(.data$value, 2)))
-    # plot(g)
+    plot(g)
     return(g)
 }
